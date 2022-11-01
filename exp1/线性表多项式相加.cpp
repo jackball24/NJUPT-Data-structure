@@ -16,29 +16,29 @@ void Create(Polynominal* p)
 	p->head = (PNode*)malloc(sizeof(PNode));	
 	p->head->exp = -1;
 	p->head->link = p->head;
-	printf("×Ô¶¨ÒåÁ½¸ö¶àÏîÊ½:\n");
-	while(1)	// ´´½¨Á´±í
+	printf("è‡ªå®šä¹‰ä¸¤ä¸ªå¤šé¡¹å¼:\n");
+	while(1)	// åˆ›å»ºé“¾è¡¨
 	{
 		mx = (PNode*)malloc(sizeof(PNode));	
-		printf("ÇëÊäÈëÏµÊı:\n");
-		scanf("%d", &mx->coef);				// ÊäÈëÏµÊı
-		printf("Ö¸Êı£¨Ğ¡ÓÚ0Ê±Í£Ö¹ÊäÈë£©:\n");
-		scanf("%d", &mx->exp);				// ÊäÈëÖ¸Êı
-		if (mx->exp < 0)						// µ±Ö¸ÊıÎª0Ê±Í£Ö¹ÊäÈë
+		printf("è¯·è¾“å…¥ç³»æ•°:\n");
+		scanf("%d", &mx->coef);				// è¾“å…¥ç³»æ•°
+		printf("æŒ‡æ•°ï¼ˆå°äº0æ—¶åœæ­¢è¾“å…¥ï¼‰:\n");
+		scanf("%d", &mx->exp);				// è¾“å…¥æŒ‡æ•°
+		if (mx->exp < 0)						// å½“æŒ‡æ•°ä¸º0æ—¶åœæ­¢è¾“å…¥
 			break;
 		pre = p->head;
 		q = p->head->link;
-		while (q&&q->exp>mx->exp)				// °´ÕÕ½µÃİÅÅÁĞ
+		while (q&&q->exp>mx->exp)				// æŒ‰ç…§é™å¹‚æ’åˆ—
 		{
 			pre = q;
 			q = q->link;
 		}
-		mx->link = q;							// ²åÈë½áµã
+		mx->link = q;							// æ’å…¥ç»“ç‚¹
 		pre->link = mx;
 	}
 }
 
-void Output(Polynominal* p)							// Êä³ö
+void Output(Polynominal* p)							// è¾“å‡º
 {
 	PNode* temp = p->head->link;
 	while (temp->exp>=0)
@@ -47,43 +47,43 @@ void Output(Polynominal* p)							// Êä³ö
 		printf("+");
 		temp = temp->link;
 	}
-	// ¿ØÖÆ¸ñÊ½
+	// æ§åˆ¶æ ¼å¼
 	printf("\b ");
 	printf("\n");
 }
 
-void Add(Polynominal* px, Polynominal* qx)			// ¶àÏîÊ½Ïà¼Ó
+void Add(Polynominal* px, Polynominal* qx)			// å¤šé¡¹å¼ç›¸åŠ 
 {
-	PNode* q, * q1 = qx->head, * p, * p1, * temp;	// q1Ö¸Ïò±íÍ·½áµã
-	p = px->head->link;								// pÖ¸Ïò¶àÏîÊ½pxµÄµÚÒ»¸ö½áµã
+	PNode* q, * q1 = qx->head, * p, * p1, * temp;	// q1æŒ‡å‘è¡¨å¤´ç»“ç‚¹
+	p = px->head->link;								// pæŒ‡å‘å¤šé¡¹å¼pxçš„ç¬¬ä¸€ä¸ªç»“ç‚¹
 	q = q1->link;									
 	while (p->exp>=0)
 	{
-		while (p->exp < q->exp)						// Ìø¹ıq->exp´óµÄÏî
+		while (p->exp < q->exp)						// è·³è¿‡q->expå¤§çš„é¡¹
 		{
 			q1 = q;
 			q = q->link;
 		}
-		if (p->exp==q->exp)							// µ±Ö¸ÊıÏàµÈÊ±£¬ÏµÊıÏà¼Ó
+		if (p->exp==q->exp)							// å½“æŒ‡æ•°ç›¸ç­‰æ—¶ï¼Œç³»æ•°ç›¸åŠ 
 		{
 			q->coef = q->coef + p->coef;
-			if (q->coef == 0)						// ÈôÏà¼ÓºóÏµÊıÎª0
+			if (q->coef == 0)						// è‹¥ç›¸åŠ åç³»æ•°ä¸º0
 			{
-				q1->link = q->link;					// É¾³ıq
-				free(p);							// ÊÍ·Å¿Õ¼ä
-				q = q1->link;						// ÖØÖÃÖ¸Õë
+				q1->link = q->link;					// åˆ é™¤q
+				free(p);							// é‡Šæ”¾ç©ºé—´
+				q = q1->link;						// é‡ç½®æŒ‡é’ˆ
 				p = p->link;
 			}
-			else									// ÈôÏà¼Óºó²»Îª0
+			else									// è‹¥ç›¸åŠ åä¸ä¸º0
 			{
-				q1 = q;								// q1ºóÒÆ
+				q1 = q;								// q1åç§»
 				q = q->link;
 				p = p->link;
 			}
 		}
-		else // p->epx > q->exp µÄÇé¿ö
+		else // p->epx > q->exp çš„æƒ…å†µ
 		{
-			temp = (PNode*)malloc(sizeof(PNode));	// Éú³ÉĞÂ½áµã
+			temp = (PNode*)malloc(sizeof(PNode));	// ç”Ÿæˆæ–°ç»“ç‚¹
 			temp->coef = p->coef;
 			temp->exp = p->exp;
 			temp->link = q1->link;
@@ -102,7 +102,7 @@ int main()
 	Output(&mx0);
 	Create(&mx1);
 	Output(&mx1);
-	printf("Ïà¼Óºó:");
+	printf("ç›¸åŠ å:");
 	Add(&mx0, &mx1);
 	Output(&mx1);
 }

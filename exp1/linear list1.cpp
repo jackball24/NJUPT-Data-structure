@@ -7,7 +7,7 @@ typedef struct list{
 	int* element;
 }SeqList;
 
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 int Init(SeqList* L, int mSize)
 {
 	L->maxLength = mSize;
@@ -18,7 +18,7 @@ int Init(SeqList* L, int mSize)
 	return 1;
 }
 
-//²éÕÒ
+//æŸ¥æ‰¾
 int Find(SeqList L, int i, int* x)
 {
 	if (i < 0 || i > L.n-1)
@@ -27,7 +27,7 @@ int Find(SeqList L, int i, int* x)
 	return 1;
 }
 
-//²åÈë
+//æ’å…¥
 int Insert(SeqList* L, int i, int x)
 {
 	int j;
@@ -42,7 +42,7 @@ int Insert(SeqList* L, int i, int x)
 	return 1;
 }
 
-//É¾³ı
+//åˆ é™¤
 int Delete(SeqList* L, int i)
 {
 	int j;
@@ -56,7 +56,7 @@ int Delete(SeqList* L, int i)
 	return 1;
 }
 
-//Êä³ö
+//è¾“å‡º
 int Output(SeqList* L)
 {
 	int i;
@@ -68,7 +68,7 @@ int Output(SeqList* L)
 	return 1;
 }
 
-//³·Ïú
+//æ’¤é”€
 void Destroy(SeqList* L)
 {
 	L->n = 0;
@@ -81,17 +81,17 @@ int main()
 	int i,n,m;
 	SeqList list;
 	Init(&list, 10);
-	for (int i = 0; i < 10; i++)
+	for (i = 0; i < 10; i++)
 		Insert(&list, i - 1,i);
-	printf("³õÊ¼»¯:\n");
+	printf("åˆå§‹åŒ–:\n");
 	Output(&list);
-	printf("·Ö±ğÊäÈëÉ¾³ıºÍ²åÈëÔªËØ8µÄÎ»ÖÃ£º");
+	printf("åˆ†åˆ«è¾“å…¥åˆ é™¤å’Œæ’å…¥å…ƒç´ 8çš„ä½ç½®ï¼š");
 	scanf("%d %d",&n,&m);
 	Delete(&list, n-1);
-	printf("É¾³ıµÚ%d¸öÔªËØºóµÄÏßĞÔ±íÎª:\n",n);
+	printf("åˆ é™¤ç¬¬%dä¸ªå…ƒç´ åçš„çº¿æ€§è¡¨ä¸º:\n",n);
 	Output(&list);
 	Insert(&list, m-1, 8);
-	printf("ÔÚµÚ%d¸öÔªËØºó²åÈë8:\n",m);
+	printf("åœ¨ç¬¬%dä¸ªå…ƒç´ åæ’å…¥8:\n",m);
 	Output(&list);
 	Destroy(&list);
 

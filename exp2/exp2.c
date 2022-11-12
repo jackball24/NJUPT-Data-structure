@@ -50,8 +50,14 @@ void main()
         switch(k)
         {
             case 1:t=creat_bt1( );break;                  //调用性质5建立二叉树算法
-            case 2:printf("\n请输入二叉树各结点值:");fflush(stdin);
-            t=creat_bt2();break;                        //调用递归建立二叉树算法
+            case 2:
+                printf("示例123##4##5#6##   其中#代表空，##代表双孩子空");
+                printf("\n    1\n  2   5\n3  4  # 6\n## ##    ##");
+                printf("\n若无法退出循环则连续输入 12##4##5#6## ");
+                printf("\n请输入二叉树各结点值:");
+                fflush(stdin);
+                t = creat_bt2();
+                break; //调用递归建立二叉树算法
             case 3:if(t)
                    {printf("先序遍历二叉树:");
                    preorder(t);
@@ -88,7 +94,7 @@ void main()
                    break;
             case 8:if(t)
                    {printf("二叉树的叶子结点数为：%d\n",leafcount(t));
-                    printf("二叉树的叶结点为：");//paintleaf(t);
+                    printf("二叉树的叶结点为：");paintleaf(t);
                     printf("\n");
                    }
                    else printf("二叉树为空！\n");
@@ -96,14 +102,14 @@ void main()
             case 9:if(t)
                    {printf("交换二叉树的左右子树：\n");
                     exchange(t);
-                    //prtbtree(t,0);
+                    prtbtree(t,0);
                     printf("\n");
                    }
                    else printf("二叉树为空！\n");
                    break;
             case 10:if(t)
                     {printf("逆时针旋转90度输出的二叉树：\n");
-                     //prtbtree(t,0);
+                     prtbtree(t,0);
                      printf("\n");
                     }
                     else printf("二叉树为空！\n");
@@ -115,6 +121,34 @@ void main()
         printf("\n再见！按回车键，返回…\n");
         ch=getchar();
 }   //main
+//输出叶结点
+void paintleaf(BiTree t)
+{
+    if(t)
+    {
+        if(t->lch==NULL&&t->rch==NULL)
+        {
+            printf("%c ",t->data);
+        }
+        paintleaf(t->lch);
+        paintleaf(t->rch);
+    }
+}
+//输出二叉树
+void prtbtree(BiTree t,int n)
+{
+    int i;
+    if(t)
+    {
+        prtbtree(t->rch,n+1);
+        for(i=0;i<n;i++)
+        {
+            printf(" ");
+        }
+        printf("%c\n",t->data);
+        prtbtree(t->lch,n+1);
+    }
+}
 //利用二叉树性质6，借助一维数组V建立二叉树
 BiTNode *creat_bt1()
 { BiTNode *t,*p,*v[20];int i,j;Etype e;
@@ -201,7 +235,7 @@ void levorder(BiTree T)                //层次遍历二叉树
     if(T){enqueue(T);
        while(front!=rear){
         p=delqueue(  );
-        printf("%3d",p->data);
+        printf("%3d",p->data-48);
         if(p->lch!=NULL)enqueue(p->lch);
         if(p->rch!=NULL)enqueue(p->rch);
         }

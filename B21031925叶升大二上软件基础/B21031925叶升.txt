@@ -1,0 +1,386 @@
+##1.希尔排序     ********************************************************************************
+
+#include <bits/stdc++.h>
+using namespace std;
+void shell2(vector<int>& a);
+int limit;
+int main(){
+	int i;
+	vector<int> a{0};
+	cout<<"请输入总个数："<<endl;
+	cin>>limit;
+	cout<<"请输入数据："<<endl;
+	for(i=0;i<limit;i++){
+		cin>>a[i];
+		a.emplace_back(a[i]);
+	}
+	cout<<endl<<endl<<"排序后："<<endl<<endl;
+	shell2(a);
+	//a.erase(a.end()-1);
+	for(i=0;i<limit;i++){
+		cout<<a[i]<<" ";
+	}
+	return 0; 
+}
+void shell2(vector<int>& a) {
+	const int start=0,end=limit-1;
+	int gap = end - start + 1;	//初始化划分增量
+	int temp{ 0 };
+	do {	//每次减小增量，直到gap = 1
+		gap = gap / 3 + 1;
+		for (int i = start + gap; i <= end; ++i) {	//对每个划分进行直接插入排序
+			if (a[i - gap] > a[i]) {
+				temp = a[i];
+				int j = i - gap;
+				do {	//移动元素并寻找位置
+					a[j + gap] = a[j];
+					j -= gap;
+				} while (j >= start && a[j] > temp);
+				a[j + gap] = temp;	//插入元素
+			}
+		}
+	} while (gap > 1);
+}
+
+##2.一般背包           ********************************************************************************
+
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int N =105;
+typedef struct treasure{
+	double w;
+	double v;
+	double p;
+}treasure;
+//自定义比较函数cmp
+bool cmp(treasure t1,treasure t2){
+	return t2.p<t1.p;
+} 
+treasure s[N];
+int main(){
+	int n,m;
+	cout<<"请输入不同物品的种数n和最大承载总重量m"<<endl;
+	cin>>n>>m;
+	cout<<"请分别输入这"<<n<<"种物品所对应的重量与价值"<<endl;
+	for(int i=0;i<n;i++){
+		cin>>s[i].w>>s[i].v;
+		s[i].p=s[i].v/s[i].w;
+	} 
+	sort(s,s+n,cmp);//对物品以性价比进行降序排列
+    cout<<"性价比排序(重新编号)："<<endl;
+    for(int i=0;i<n;i++){
+        cout<<"物品"<<i+1<<"性价比"<<s[i].p<<endl;
+    }
+	double sum=0.0;
+	for(int i=0;i<n;i++){
+		if(m>s[i].w){
+			m-=s[i].w;
+			sum+=s[i].v;
+            cout<<"物品"<<i+1<<"取重量："<<s[i].w<<"，价值为："<<s[i].v<<"元"<<endl;
+		}
+		else{
+            sum+=m*s[i].p;
+            cout<<"物品"<<i+1<<"取重量："<<m<<"，价值为："<<m*s[i].p<<"元"<<endl;
+			break; 
+		}
+	} 
+	cout<<"物品总价格最大为："<<sum<<"元"<<endl;
+	return 0;
+}
+
+##3. 0/1背包        ********************************************************************************
+
+#include <iostream>
+using namespace std;
+ 
+const int N=105;
+int weight[N],value[N],fhold[N];
+int n,m;
+ 
+int main()
+{
+    cout<<"请输入不同物品的种数n和最大承载总重量m"<<endl;
+    scanf("%d%d",&n,&m);
+    cout<<"请分别输入这"<<n<<"种物品所对应的重量与价值"<<endl;
+    for(int i=1;i<=n;i++) scanf("%d%d",&weight[i],&value[i]);
+  
+    for(int i=1;i<=n;i++)
+      for(int j=m;j>=weight[i];j--)
+      {
+        fhold[j]=max(fhold[j],fhold[j-weight[i]]+value[i]);
+        printf("i=%d,fhold[%d]=max(fhold[%d],fhold[%d-weight[%d]]+value[%d])=%d \n",i,j,j,j,i,i,fhold[j]);
+      }
+    cout<<"物品总价格最大为："<<fhold[m]<<"元"<<endl;
+    return 0;
+}
+
+##4.KMP算法        ********************************************************************************
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define SIZE (100)
+#define PRINT_ARRAY(a,n) do {for(int i = 0; i < n; i++) cout<<a[i]<<"|"; cout<<endl;} while(0)
+
+void result(const char *p, int s)
+{
+    for(int i = 0; i < s; i++)
+        printf(" ");
+    printf("%s\n",p);
+}
+
+/**********************************************
+    求next[i]:p[0]~p[i]共计i+1个字符的最大公共前后缀
+**********************************************/
+void re(int next[], const char *p)
+{
+    int i = 1, j = 0, np = strlen(p);
+    memset(next,0, sizeof(int)*np);
+    while(i < np)
+    {
+        if(p[j] == p[i])
+            next[i++] = ++j;
+        else
+        {
+            if(j > 0)   j = next[j-1];
+            else        i++;
+        }
+    }
+}
+
+void kmp(const char *t, const char *p)//主串和子串
+{
+    printf("**********************************************\n");
+    printf("%s\n",t);
+
+    int next[SIZE];
+    re(next, p);
+    int i = 0, j = 0, nt = strlen(t), np = strlen(p);
+    while(i < nt)
+    {
+        if(p[j] == t[i])
+        {
+            i++,j++;
+            if(j == np)
+            {
+                result(p, i-j);
+                j = next[np-1];
+            }
+        }
+        else
+        {
+            if(j > 0)   j = next[j-1];
+            else        i++;
+        }
+    }
+}
+
+int main()
+{
+    string a, b;
+    cout<<"输入子串和主串："<<endl;
+    while (cin >> a >> b)
+    {
+        kmp(b.c_str(), a.c_str());
+    }
+    kmp("ABABABABC", "ABAB");
+    kmp("ABABCABAB", "ABAB");
+    kmp("AAAAAAA", "AAA");
+    kmp("ABABABC", "ABABC");
+    kmp("XYXZdeOXZZKWXYZ", "WXYZ");
+    kmp("GCAATGCCTATGTGACCTATGTG", "TATGTG");
+    kmp("AGATACGATATATAC", "ATATA");
+    kmp("CATCGCGGAGAGTATAGCAGAGAG", "GCAGAGAG");
+    return 0;
+}
+
+##5.图像压缩             ********************************************************************************
+
+#include <iostream>
+using namespace std;
+
+#define N 100
+
+//求灰度值是val的像素所需要的位数，即多少二进制位
+int length( int val ) {
+    int count = 1;
+    val /= 2;
+
+    while( val > 0 ) {
+        count++;
+        val /= 2;
+    }
+
+    return count;
+}
+
+//计算最优值
+// l[i]存的的从1到i的序列中某个位置i-j+1隔开到最后i这一段的最优长度l[i]
+// b[i]应该要存相应段的最大像素位数，但实际存的是每个像素的所占位数
+//变量含义  n：序列p中元素个数  p：灰度值序列  s：存从1到i最少存储位数
+void Compress( int n, int *p, int *s, int *l, int *b ) {
+    int bb[N];
+    int Lmax = 255;  //像素序列最大长度
+    int header = 11; //每一段的头部信息3（元素最多用8位二进制数表示）+8（段最大长度255）=11
+    s[0] = 0;
+
+    //子问题的后边界i
+    for( int i = 1; i <= n; i++ ) {
+        //计算像素点p需要的存储位数
+        b[i] = length( p[i] );
+        int bMax = b[i];            //后面段中元素所占位数最大值
+        s[i] = s[i - 1] + 1 * bMax; //只有一个元素，所以*1
+        l[i] = 1;
+
+        // j为最后一段中元素个数，j取i和255中的最小值
+        //可看作从i往前逐渐扩大i到i-1,i再到i-2,i-1,i...
+        for( int j = 2; j <= i && j <= Lmax; j++ ) {
+
+            //元素逐渐向前更新，可能会出现比bMax更大的，需要更新
+            if( bMax < b[i - j + 1] ) {
+                bMax = b[i - j + 1];
+            }
+
+            //找到更好的分段  j为段中元素个数
+            if( s[i] > s[i - j] + j * bMax ) {
+                s[i] = s[i - j] + j * bMax;
+                l[i] = j;
+
+            }
+        }
+
+        //加上每一段的头部信息3（元素最多用8位二进制数表示）+8（段最大长度255）
+        s[i] += header;
+    }
+
+    cout << "图像压缩后的最小空间：" << s[n] << endl;
+}
+
+// 构造最优解    
+
+void TraceBack( int n, int *l, int *b ) { // n，l,b与上方同义
+    int j = 1; //正在追踪的段数，从后往前，最后面是第一段
+    int c[100];  //存划分段的的长度
+    int w[100];  //存划分段元素所需最大位数
+
+    while( n ) {
+        c[j] = l[n];  //从后往前追踪的第j段长度
+        w[j] = b[n];  //从后往前追踪的第j段元素最大位数
+
+        //求位数的方法
+        //遍历每一个段所有元素，取最大值
+        for( int i = n - l[n] + 1; i <= n; i++ ) {
+            if( w[j] < b[i] ) {
+                w[j] = b[i];
+            }
+
+        }
+
+        n = n - l[n]; // n更新为第j段之前序列长度
+        j++;
+    }
+
+    cout << "将原序列划分成 " << j - 1 << " 段\n";
+
+    for( int i = j - 1; i >= 1; i-- ) {
+        cout << "段长度:" << c[i] << ",所需存储位数：" << w[i] << endl;
+    }
+}
+
+int main() {
+    int p[N] = {0} ; //图像灰度数组{p1,p2,p3,p4,p5,p6...pn} 下标从1开始计数,p0是0
+    int s[N] = {0}, l[N] = {0}, b[N] = {0};	//s存最优值，l存最优解
+    int n;
+    cout << "请输入灰度值序列元素个数(最多99):";
+    cin >> n;
+    cout << "请输入灰度值序列元素:";
+
+    for( int i = 1; i <= n; i++ ) {
+        cin >> p[i];
+    }
+
+    cout << "图像的灰度序列为：" ;
+
+    for( int i = 1; i < n + 1; i++ ) {
+        cout << p[i] << " ";
+    }
+
+    cout << endl;
+
+    Compress( n, p, s, l, b );
+    TraceBack( n, l, b );
+    //Output(s, l, b, n);
+    system( "pause" );
+    return 0;
+}
+
+//例1： 15 5 37 244 20 50
+//例2： 10 12 15 255 1 2
+
+##6.残缺棋盘          ********************************************************************************
+
+#include<bits/stdc++.h>
+using namespace std;
+static int tile = 1;
+static int board[32][32];
+void divide(int ox,int oy,int row,int column,int size){
+    if (size == 1) return;
+    int  t = tile++;
+    int  s = size/2;
+    // 覆盖左上角子棋盘
+    if (row<ox+s && column<oy+s) {
+        // 特殊方格在此棋盘
+        divide(ox,oy,row,column,s);
+    } else {
+        // 此棋盘中无特殊方格，用t号L型骨牌覆盖右下角*
+        board[ox+s-1][oy+s-1] = t;
+        // 覆盖其余方格
+        divide(ox,oy,ox+s-1,oy+s-1,s);
+    }
+    // 覆盖右上角子棋盘
+    if (row<ox+s && column>=oy+s) {
+        //        特殊方格在此棋盘
+        divide(ox,oy+s,row,column,s);
+    } else {
+        // 此棋盘中无特殊方格，用t号L型骨牌覆盖左下角
+        board[ox+s-1][oy+s] = t;
+        // 覆盖其余方格
+        divide(ox,oy+s,ox+s-1,oy+s,s);
+    }
+    // 覆盖左下角子棋盘
+    if (row>=ox+s && column<oy+s) {
+        //  特殊方格在此棋盘
+        divide(ox+s,oy,row,column,s);
+    } else {
+        //  此棋盘中无特殊方格，用t号L型骨牌覆盖右上角
+        board[ox+s][oy+s-1] = t;
+        //  覆盖其余方格
+        divide(ox+s,oy,ox+s,oy+s-1,s);
+    }
+    // 覆盖右下角子棋盘
+    if (row>=ox+s && column>=oy+s) {
+        //  特殊方格在此棋盘
+        divide(ox+s,oy + s,row,column,s);
+    } else {
+        // 此棋盘中无特殊方格，用t号L型骨牌覆盖左下角
+        board[ox+s][oy+s] = t;
+        // 覆盖其余方格
+        divide(ox+s,oy+s,ox+s,oy+s,s);
+    }
+}
+
+int main() {
+    int length,x,y;
+    cout << "**原点为(0,0) 且边长为2^n**" << endl;
+    cout<<"依次输入:特殊方格的x y 总边长"<<endl; 
+    cin>>x>>y>>length;
+    divide(0,0,x,y,length);
+    for(int i = 0;i< length;i++) {
+        for (int j = 0; j<length;j++) {
+            cout<<setiosflags(ios::left)<<setw(3)<<board[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
